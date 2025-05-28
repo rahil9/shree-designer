@@ -54,7 +54,11 @@ export default function MeasurementForm({ type, onSubmit }: MeasurementFormProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateMeasurements()) {
-      onSubmit(measurements as Record<string, number>);
+      const numericMeasurements = Object.entries(measurements).reduce((acc, [key, value]) => ({
+        ...acc,
+        [key]: Number(value)
+      }), {} as Record<string, number>);
+      onSubmit(numericMeasurements);
     }
   };
 
