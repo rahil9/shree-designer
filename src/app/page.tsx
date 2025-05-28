@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import PasswordProtection from "@/components/PasswordProtection";
 import { Button } from "@/components/ui/button";
 import { LogOut, UserPlus, Ruler, Search, Pencil } from "lucide-react";
@@ -39,7 +40,14 @@ export default function Home() {
       </Button>
 
       <main className="h-screen flex flex-col items-center justify-center gap-6">
-        <img src="/logo.jpg" alt="Shree Designer Logo" className="mb-8 h-32 w-32 object-contain" />
+        <Image 
+          src="/logo.jpg" 
+          alt="Shree Designer Logo" 
+          className="mb-8 object-contain" 
+          width={128}
+          height={128}
+          priority
+        />
 {/* 
         <h1 className="text-3xl font-bold mb-8">Shree Designer</h1>
          */}

@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 
 interface MeasurementFormProps {
   type: 'top' | 'blouse' | 'salwar';
-  onSubmit: (measurements: any) => void;
+  onSubmit: (measurements: Record<string, string>) => void;
 }
 
 const topAndBlouseFields = [

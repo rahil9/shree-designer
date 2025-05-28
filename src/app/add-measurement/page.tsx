@@ -35,7 +35,7 @@ interface Customer {
   id: string;
   name: string;
   phone: string;
-  measurements: Record<string, any>;
+  measurements: Record<string, Record<string, number>>;
 }
 
 export default function AddMeasurement() {
@@ -45,7 +45,7 @@ export default function AddMeasurement() {
   const [selectedCustomer, setSelectedCustomer] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [existingMeasurements, setExistingMeasurements] = useState<any>(null);
+  const [existingMeasurements, setExistingMeasurements] = useState<Record<string, Record<string, number>> | null>(null);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -74,7 +74,7 @@ export default function AddMeasurement() {
     setSelectedType(type);
   };
 
-  const handleMeasurementSubmit = async (measurements: any) => {
+  const handleMeasurementSubmit = async (measurements: Record<string, number>) => {
     if (!selectedCustomer || !selectedType) return;
 
     setIsSubmitting(true);

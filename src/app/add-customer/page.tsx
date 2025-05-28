@@ -34,7 +34,7 @@ export default function AddCustomer() {
     name: '',
     phone: '',
     measurementType: '',
-    measurements: null as any,
+    measurements: null as Record<string, number> | null,
   });
   const [errors, setErrors] = useState({
     name: '',
@@ -73,7 +73,7 @@ export default function AddCustomer() {
     }
   };
 
-  const handleMeasurementSubmit = async (measurements: any) => {
+  const handleMeasurementSubmit = async (measurements: Record<string, number>) => {
     setIsSubmitting(true);
     const capitalizedType = formData.measurementType.charAt(0).toUpperCase() + formData.measurementType.slice(1);
     const customerData = {
@@ -85,7 +85,7 @@ export default function AddCustomer() {
     };
 
     try {
-      const docRef = await addDoc(collection(db, 'customers'), customerData);
+      await addDoc(collection(db, 'customers'), customerData);
       toast({
         title: "Success!",
         description: `Successfully added ${capitalizedType} measurements for ${formData.name}`,

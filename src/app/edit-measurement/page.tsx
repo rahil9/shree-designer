@@ -53,7 +53,7 @@ export default function EditMeasurement() {
 
   useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [fetchCustomers]);
 
   const fetchCustomers = async () => {
     try {
@@ -90,9 +90,9 @@ export default function EditMeasurement() {
     }
   };
 
-  const handleMeasurementChange = (key: string, value: string) => {
+  const handleMeasurementChange = (key: string, newValue: string) => {
     // Remove any character that is not a digit or a decimal point
-    let cleanedValue = value.replace(/[^0-9.]/g, '');
+    let cleanedValue = newValue.replace(/[^0-9.]/g, '');
 
     // Handle multiple decimal points: keep only the first one
     const decimalParts = cleanedValue.split('.');
@@ -104,10 +104,6 @@ export default function EditMeasurement() {
       ...prev,
       [key]: cleanedValue
     }));
-
-    // We no longer need an explicit toast here for invalid character *entry*,
-    // as the character is simply not added to the state/input field.
-    // The validation before saving will catch empty or non-numeric *final* values.
   };
 
   const handleSave = async () => {
