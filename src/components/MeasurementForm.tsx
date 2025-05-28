@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 
 interface MeasurementFormProps {
   type: 'top' | 'blouse' | 'salwar';
-  onSubmit: (measurements: Record<string, string>) => void;
+  onSubmit: (measurements: Record<string, number>) => void;
 }
 
 const topAndBlouseFields = [
@@ -54,7 +54,7 @@ export default function MeasurementForm({ type, onSubmit }: MeasurementFormProps
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateMeasurements()) {
-      onSubmit(measurements);
+      onSubmit(measurements as Record<string, number>);
     }
   };
 
