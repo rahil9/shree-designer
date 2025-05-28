@@ -248,7 +248,7 @@ export default function EditMeasurement() {
                   </h2>
                   
                   <div className="grid grid-cols-2 gap-4">
-                    {Object.entries(measurements).map(([key, value]) => (
+                    {Object.entries(measurements).map(([key]) => (
                       <div key={key} className="space-y-2">
                         <Label>{key}</Label>
                         <Input
