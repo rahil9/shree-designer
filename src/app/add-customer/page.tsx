@@ -29,7 +29,6 @@ export default function AddCustomer() {
   const router = useRouter();
   const { toast } = useToast();
   const [step, setStep] = useState(1);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     phone: '',
@@ -74,7 +73,6 @@ export default function AddCustomer() {
   };
 
   const handleMeasurementSubmit = async (measurements: Record<string, number>) => {
-    setIsSubmitting(true);
     const capitalizedType = formData.measurementType.charAt(0).toUpperCase() + formData.measurementType.slice(1);
     const customerData = {
       name: formData.name,
@@ -99,8 +97,6 @@ export default function AddCustomer() {
         description: "Failed to save customer data. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

@@ -44,7 +44,6 @@ export default function AddMeasurement() {
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedCustomer, setSelectedCustomer] = useState<string>('');
   const [selectedType, setSelectedType] = useState<string>('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingMeasurements, setExistingMeasurements] = useState<Record<string, Record<string, number>> | null>(null);
 
   useEffect(() => {
@@ -77,7 +76,6 @@ export default function AddMeasurement() {
   const handleMeasurementSubmit = async (measurements: Record<string, number>) => {
     if (!selectedCustomer || !selectedType) return;
 
-    setIsSubmitting(true);
     const capitalizedType = selectedType.charAt(0).toUpperCase() + selectedType.slice(1);
     const customer = customers.find(c => c.id === selectedCustomer);
     
@@ -112,8 +110,6 @@ export default function AddMeasurement() {
         description: "Failed to save measurements. Please try again.",
         variant: "destructive",
       });
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

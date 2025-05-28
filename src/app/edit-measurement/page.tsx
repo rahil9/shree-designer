@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { collection, getDocs, doc, updateDoc, query, where } from 'firebase/firestore';
+import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ArrowLeft, Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -51,11 +51,7 @@ export default function EditMeasurement() {
   const [measurements, setMeasurements] = useState<{ [key: string]: string }>({});
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    fetchCustomers();
-  }, [fetchCustomers]);
-
-  const fetchCustomers = async () => {
+  const fetchCustomers = useCallback(async () => {
     try {
       const customersRef = collection(db, 'customers');
       const querySnapshot = await getDocs(customersRef);
@@ -72,7 +68,11 @@ export default function EditMeasurement() {
         description: "Failed to fetch customers. Please try again.",
       });
     }
-  };
+  }, [toast]);
+
+  useEffect(() => {
+    fetchCustomers();
+  }, [fetchCustomers]);
 
   const handleCustomerSelect = (customer: Customer) => {
     setSelectedCustomer(customer);
