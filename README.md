@@ -1,4 +1,25 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Shree Designer
+
+**Shree Designer** is a modern web application built with [Next.js](https://nextjs.org/) and styled using [Tailwind CSS](https://tailwindcss.com/). This project serves as a foundation for developing scalable and high-performance web applications.
+
+## 🚀 Features
+
+- ⚡ **Next.js 14**: Leverages the latest features of Next.js for optimal performance.
+- 🎨 **Tailwind CSS**: Utility-first CSS framework for rapid UI development.
+- 🛠️ **TypeScript**: Adds static typing to JavaScript, enhancing code quality and developer experience.
+- 📂 **App Directory Structure**: Organized using the new `app` directory for improved routing and layout management.
+- 💅 **PostCSS**: Enables transformation of CSS with JavaScript plugins.
+- 🔍 **ESLint**: Integrated for maintaining code quality and consistency.
+
+## 📸 Demo
+
+## 📦 Technologies Used
+
+- [Next.js](https://nextjs.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [PostCSS](https://postcss.org/)
+- [ESLint](https://eslint.org/)
 
 ## Getting Started
 
