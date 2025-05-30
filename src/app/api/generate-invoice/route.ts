@@ -1,7 +1,5 @@
 import { NextResponse } from 'next/server'
 import { google } from 'googleapis'
-import PDFDocument from 'pdfkit'
-import { format } from 'date-fns'
 import { OAuth2Client } from 'google-auth-library'
 
 interface InvoiceData {
