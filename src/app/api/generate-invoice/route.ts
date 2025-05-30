@@ -14,22 +14,40 @@ interface InvoiceData {
 }
 
 export async function POST(request: Request) {
-  const data: InvoiceData = await request.json()
-  const { customerName, customerPhone, clothingType, subType, otherClothing, quantity, amount } = data
-  const currentDate = new Date().toLocaleDateString()
-
-  const auth = new google.auth.GoogleAuth({
-    keyFile: 'service-account.json',
-    scopes: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents'],
-  })
-
-  const authClient = await auth.getClient() as OAuth2Client
-  const docs = google.docs({ version: 'v1', auth: authClient })
-  const drive = google.drive({ version: 'v3', auth: authClient })
-
-  const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID
-
   try {
+    const data: InvoiceData = await request.json()
+    const { customerName, customerPhone, clothingType, subType, otherClothing, quantity, amount } = data
+    const currentDate = new Date().toLocaleDateString()
+
+    if (!process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL || !process.env.GOOGLE_PRIVATE_KEY) {
+      console.error('Missing Google service account credentials');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
+    const auth = new google.auth.GoogleAuth({
+      credentials: {
+        client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
+        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      },
+      scopes: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents'],
+    })
+
+    const authClient = await auth.getClient() as OAuth2Client
+    const docs = google.docs({ version: 'v1', auth: authClient })
+    const drive = google.drive({ version: 'v3', auth: authClient })
+
+    const TEMPLATE_ID = process.env.NEXT_PUBLIC_TEMPLATE_ID
+    if (!TEMPLATE_ID) {
+      console.error('Missing template ID');
+      return NextResponse.json(
+        { error: 'Server configuration error' },
+        { status: 500 }
+      );
+    }
+
     // 1. Copy the template
     const copy = await drive.files.copy({
       fileId: TEMPLATE_ID,
@@ -38,7 +56,11 @@ export async function POST(request: Request) {
       },
     })
 
-    const copyId = copy.data.id!
+    if (!copy.data.id) {
+      throw new Error('Failed to copy template');
+    }
+
+    const copyId = copy.data.id
 
     // 2. Replace placeholders
     const itemText = clothingType === 'other' ? otherClothing : `${clothingType} (${subType})`
@@ -82,7 +104,11 @@ export async function POST(request: Request) {
       },
     })
 
-    const fileId = pdfUpload.data.id!
+    if (!pdfUpload.data.id) {
+      throw new Error('Failed to upload PDF');
+    }
+
+    const fileId = pdfUpload.data.id
 
     // 5. Make the file publicly accessible
     await drive.permissions.create({
@@ -101,7 +127,10 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ pdfUrl: fileMeta.data.webViewLink })
   } catch (err) {
-    console.error(err)
-    return NextResponse.json({ error: 'Failed to generate invoice' }, { status: 500 })
+    console.error('Error generating invoice:', err)
+    return NextResponse.json(
+      { error: 'Failed to generate invoice', details: err instanceof Error ? err.message : 'Unknown error' },
+      { status: 500 }
+    )
   }
 } 
