@@ -2,24 +2,22 @@ import { NextResponse } from 'next/server'
 import { google } from 'googleapis'
 import PDFDocument from 'pdfkit'
 import { format } from 'date-fns'
+import { OAuth2Client } from 'google-auth-library'
 
 interface InvoiceData {
+  customerId: string
   customerName: string
   customerPhone: string
-  customerAddress: string
-  items: Array<{
-    type: string
-    quantity: number
-    price: number
-  }>
-  totalAmount: number
-  advanceAmount: number
-  remainingAmount: number
-  deliveryDate: string
+  clothingType: string
+  subType: string
+  otherClothing?: string
+  quantity: number
+  amount: number
 }
 
 export async function POST(request: Request) {
-  const { customerName, customerPhone, clothingType, subType, otherClothing, quantity, amount } = await request.json()
+  const data: InvoiceData = await request.json()
+  const { customerName, customerPhone, clothingType, subType, otherClothing, quantity, amount } = data
   const currentDate = new Date().toLocaleDateString()
 
   const auth = new google.auth.GoogleAuth({
@@ -27,7 +25,7 @@ export async function POST(request: Request) {
     scopes: ['https://www.googleapis.com/auth/drive', 'https://www.googleapis.com/auth/documents'],
   })
 
-  const authClient = await auth.getClient() as any
+  const authClient = await auth.getClient() as OAuth2Client
   const docs = google.docs({ version: 'v1', auth: authClient })
   const drive = google.drive({ version: 'v3', auth: authClient })
 

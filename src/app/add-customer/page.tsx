@@ -37,7 +37,6 @@ export default function AddCustomer() {
     measurements: null as Record<string, number> | null,
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const validateStep1 = () => {
     const newErrors = {
@@ -89,7 +88,6 @@ export default function AddCustomer() {
 
     try {
       setIsLoading(true);
-      setError(null);
 
       await addDoc(collection(db, 'customers'), customerData);
 
@@ -111,7 +109,11 @@ export default function AddCustomer() {
       router.push('/');
     } catch (err) {
       console.error('Error adding customer:', err);
-      setError('Failed to add customer. Please try again.');
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: 'Failed to add customer. Please try again.',
+      });
     } finally {
       setIsLoading(false);
     }
