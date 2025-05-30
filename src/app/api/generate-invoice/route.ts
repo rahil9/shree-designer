@@ -1,5 +1,22 @@
 import { NextResponse } from 'next/server'
 import { google } from 'googleapis'
+import PDFDocument from 'pdfkit'
+import { format } from 'date-fns'
+
+interface InvoiceData {
+  customerName: string
+  customerPhone: string
+  customerAddress: string
+  items: Array<{
+    type: string
+    quantity: number
+    price: number
+  }>
+  totalAmount: number
+  advanceAmount: number
+  remainingAmount: number
+  deliveryDate: string
+}
 
 export async function POST(request: Request) {
   const { customerName, customerPhone, clothingType, subType, otherClothing, quantity, amount } = await request.json()

@@ -127,19 +127,21 @@ export default function GenerateBill() {
 
       await addDoc(collection(db, 'bills'), billData);
 
-      const res = await fetch('/api/generate-invoice', {
+      const response = await fetch('/api/generate-invoice', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(billData),
       });
 
-      const data = await res.json();
-      
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to generate invoice');
+      if (!response.ok) {
+        throw new Error('Failed to generate invoice');
       }
 
-      setPdfUrl(data.pdfUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, '_blank');
 
       // Format WhatsApp number (remove spaces, dashes, and ensure it starts with country code)
       let whatsappNumber = selectedCustomer.phone.replace(/[\s-]/g, '');
@@ -149,7 +151,7 @@ export default function GenerateBill() {
       
       // Generate WhatsApp link
       const message = encodeURIComponent(
-        `Hello ${selectedCustomer.name},\n\nThank you for your purchase!\nYour invoice is ready:\n${data.pdfUrl}\n\nBest regards,\nShree Designer`
+        `Hello ${selectedCustomer.name},\n\nThank you for your purchase!\nYour invoice is ready:\n${url}\n\nBest regards,\nShree Designer`
       );
       const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`;
 

@@ -109,13 +109,9 @@ export default function AddCustomer() {
 
       // Navigate back
       router.push('/');
-    } catch (error) {
-      console.error('Error adding customer:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to add customer. Please try again.",
-      });
+    } catch (err) {
+      console.error('Error adding customer:', err);
+      setError('Failed to add customer. Please try again.');
     } finally {
       setIsLoading(false);
     }
