@@ -16,7 +16,8 @@ import { ArrowLeft } from "lucide-react";
 import MeasurementForm from "@/components/MeasurementForm";
 import { db } from "@/lib/firebase";
 import { collection, getDocs, doc, updateDoc, getDoc } from 'firebase/firestore';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 interface MeasurementType {
   value: string;
@@ -48,15 +49,24 @@ export default function AddMeasurement() {
 
   useEffect(() => {
     const fetchCustomers = async () => {
-      const querySnapshot = await getDocs(collection(db, 'customers'));
-      const customersList = querySnapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Customer[];
-      setCustomers(customersList);
+      try {
+        const querySnapshot = await getDocs(collection(db, 'customers'));
+        const customersList = querySnapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Customer[];
+        setCustomers(customersList);
+      } catch (error) {
+        console.error('Error fetching customers:', error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch customers. Please try again.",
+        });
+      }
     };
     fetchCustomers();
-  }, []);
+  }, [toast]);
 
   const handleCustomerSelect = async (customerId: string) => {
     setSelectedCustomer(customerId);
@@ -74,7 +84,14 @@ export default function AddMeasurement() {
   };
 
   const handleMeasurementSubmit = async (measurements: Record<string, number>) => {
-    if (!selectedCustomer || !selectedType) return;
+    if (!selectedCustomer || !selectedType) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please select a customer and measurement type.",
+      });
+      return;
+    }
 
     const capitalizedType = selectedType.charAt(0).toUpperCase() + selectedType.slice(1);
     const customer = customers.find(c => c.id === selectedCustomer);
@@ -102,13 +119,14 @@ export default function AddMeasurement() {
         description: `Successfully added ${capitalizedType} measurements for ${customer?.name}`,
         className: "bg-green-500 text-white border-green-600",
       });
+
       router.push('/');
     } catch (error) {
       console.error('Error saving measurements:', error);
       toast({
+        variant: "destructive",
         title: "Error",
         description: "Failed to save measurements. Please try again.",
-        variant: "destructive",
       });
     }
   };
@@ -201,6 +219,7 @@ export default function AddMeasurement() {
           </CardContent>
         </Card>
       </div>
+      <Toaster />
     </div>
   );
 } 

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import PasswordProtection from "@/components/PasswordProtection";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserPlus, Ruler, Search, Pencil } from "lucide-react";
+import { LogOut, UserPlus, Ruler, Search, Pencil, Receipt } from "lucide-react";
 
 export default function Home() {
   const router = useRouter();
@@ -82,6 +82,14 @@ export default function Home() {
           >
             <Pencil className="h-6 w-6" />
             <span>Edit Measurement</span>
+          </Button>
+
+          <Button 
+            className="h-16 flex items-center justify-center gap-3 text-lg"
+            onClick={() => router.push('/generate-bill')}
+          >
+            <Receipt className="h-6 w-6" />
+            <span>Generate Bill</span>
           </Button>
         </div>
       </main>

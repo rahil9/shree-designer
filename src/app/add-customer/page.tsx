@@ -17,7 +17,8 @@ import { ArrowLeft } from "lucide-react";
 import MeasurementForm from "@/components/MeasurementForm";
 import { db } from "@/lib/firebase";
 import { collection, addDoc } from 'firebase/firestore';
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 const measurementTypes = [
   { value: 'top', label: 'Top' },
@@ -35,11 +36,8 @@ export default function AddCustomer() {
     measurementType: '',
     measurements: null as Record<string, number> | null,
   });
-  const [errors, setErrors] = useState({
-    name: '',
-    phone: '',
-    measurementType: '',
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const validateStep1 = () => {
     const newErrors = {
@@ -62,8 +60,15 @@ export default function AddCustomer() {
       newErrors.measurementType = 'Please select a measurement type';
     }
 
-    setErrors(newErrors);
-    return !Object.values(newErrors).some(error => error);
+    const hasErrors = Object.values(newErrors).some(error => error);
+    if (hasErrors) {
+      toast({
+        variant: "destructive",
+        title: "Validation Error",
+        description: Object.values(newErrors).find(error => error) || "Please check your input.",
+      });
+    }
+    return !hasErrors;
   };
 
   const handleNext = () => {
@@ -83,20 +88,36 @@ export default function AddCustomer() {
     };
 
     try {
+      setIsLoading(true);
+      setError(null);
+
       await addDoc(collection(db, 'customers'), customerData);
+
       toast({
         title: "Success!",
         description: `Successfully added ${capitalizedType} measurements for ${formData.name}`,
         className: "bg-green-500 text-white border-green-600",
       });
+
+      // Reset form
+      setFormData({
+        name: '',
+        phone: '',
+        measurementType: '',
+        measurements: null,
+      });
+
+      // Navigate back
       router.push('/');
     } catch (error) {
-      console.error('Error saving customer data:', error);
+      console.error('Error adding customer:', error);
       toast({
-        title: "Error",
-        description: "Failed to save customer data. Please try again.",
         variant: "destructive",
+        title: "Error",
+        description: "Failed to add customer. Please try again.",
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -130,7 +151,6 @@ export default function AddCustomer() {
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="Enter customer name"
                   />
-                  {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -143,7 +163,6 @@ export default function AddCustomer() {
                     placeholder="Enter 10-digit phone number"
                     maxLength={10}
                   />
-                  {errors.phone && <p className="text-sm text-destructive">{errors.phone}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -163,13 +182,10 @@ export default function AddCustomer() {
                       ))}
                     </SelectContent>
                   </Select>
-                  {errors.measurementType && (
-                    <p className="text-sm text-destructive">{errors.measurementType}</p>
-                  )}
                 </div>
 
-                <Button type="submit" className="w-full">
-                  Next
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? 'Adding...' : 'Next'}
                 </Button>
               </form>
             ) : (
@@ -181,6 +197,7 @@ export default function AddCustomer() {
           </CardContent>
         </Card>
       </div>
+      <Toaster />
     </div>
   );
 } 

@@ -24,11 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useToast } from "@/hooks/use-toast";
 import { collection, getDocs, doc, updateDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { ArrowLeft, Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
 
 interface Customer {
   id: string;
@@ -274,6 +275,7 @@ export default function EditMeasurement() {
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 } 
