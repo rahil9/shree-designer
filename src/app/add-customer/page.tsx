@@ -121,79 +121,74 @@ export default function AddCustomer() {
 
   return (
     <div className="min-h-screen p-4">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => router.back()}
-        className="absolute top-4 left-4"
-      >
-        <ArrowLeft className="h-5 w-5" />
-        <span className="sr-only">Back</span>
-      </Button>
+      <div className="flex items-center gap-2 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="text-2xl font-bold">
+          {step === 1 ? 'Add New Customer' : 'Add Measurements'}
+        </h1>
+      </div>
 
-      <div className="max-w-md mx-auto pt-16">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">
-              {step === 1 ? 'Add New Customer' : 'Add Measurements'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {step === 1 ? (
-              <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
-                <div className="space-y-2">
-                  <Label htmlFor="name">Name</Label>
-                  <Input
-                    id="name"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Enter customer name"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="Enter 10-digit phone number"
-                    maxLength={10}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="measurementType">Measurement Type</Label>
-                  <Select
-                    value={formData.measurementType}
-                    onValueChange={(value) => setFormData({ ...formData, measurementType: value })}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select measurement type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {measurementTypes.map((type) => (
-                        <SelectItem key={type.value} value={type.value}>
-                          {type.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <Button type="submit" className="w-full" disabled={isLoading}>
-                  {isLoading ? 'Adding...' : 'Next'}
-                </Button>
-              </form>
-            ) : (
-              <MeasurementForm
-                type={formData.measurementType as 'top' | 'blouse' | 'salwar'}
-                onSubmit={handleMeasurementSubmit}
+      <div className="max-w-md mx-auto space-y-6">
+        {step === 1 ? (
+          <form className="space-y-6" onSubmit={(e) => { e.preventDefault(); handleNext(); }}>
+            <div className="space-y-2">
+              <Label htmlFor="name">Name</Label>
+              <Input
+                id="name"
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                placeholder="Enter customer name"
               />
-            )}
-          </CardContent>
-        </Card>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                type="tel"
+                value={formData.phone}
+                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                placeholder="Enter 10-digit phone number"
+                maxLength={10}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="measurementType">Measurement Type</Label>
+              <Select
+                value={formData.measurementType}
+                onValueChange={(value) => setFormData({ ...formData, measurementType: value })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select measurement type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {measurementTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? 'Adding...' : 'Next'}
+            </Button>
+          </form>
+        ) : (
+          <MeasurementForm
+            type={formData.measurementType as 'top' | 'blouse' | 'salwar'}
+            onSubmit={handleMeasurementSubmit}
+          />
+        )}
       </div>
       <Toaster />
     </div>

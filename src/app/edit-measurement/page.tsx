@@ -164,18 +164,19 @@ export default function EditMeasurement() {
 
   return (
     <div className="min-h-screen p-6">
-      <Button
-        variant="ghost"
-        onClick={() => router.push('/')}
-        className="mb-6"
-      >
-        <ArrowLeft className="h-4 w-4 mr-2" />
-        Back
-      </Button>
+      <div className="flex items-center gap-2 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push('/')}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="text-2xl font-bold">Edit Measurements</h1>
+      </div>
 
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-8">Edit Measurements</h1>
-
         <div className="space-y-6">
           <div className="space-y-2">
             <Label>Search Customer</Label>

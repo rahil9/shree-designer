@@ -143,81 +143,78 @@ export default function AddMeasurement() {
 
   return (
     <div className="min-h-screen p-4">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => router.back()}
-        className="absolute top-4 left-4"
-      >
-        <ArrowLeft className="h-5 w-5" />
-        <span className="sr-only">Back</span>
-      </Button>
+      <div className="flex items-center gap-2 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="text-2xl font-bold">
+          Add Measurements
+        </h1>
+      </div>
 
-      <div className="max-w-md mx-auto pt-16">
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl text-center">Add New Measurement</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <div className="space-y-2">
-                <Label htmlFor="customer">Select Customer</Label>
-                <Select
-                  value={selectedCustomer}
-                  onValueChange={handleCustomerSelect}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select a customer" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {customers.map((customer) => (
-                      <SelectItem key={customer.id} value={customer.id}>
-                        {customer.name} - {customer.phone}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+      <div className="max-w-md mx-auto space-y-6">
+        <div className="space-y-6">
+          <div className="space-y-2">
+            <Label htmlFor="customer">Select Customer</Label>
+            <Select
+              value={selectedCustomer}
+              onValueChange={handleCustomerSelect}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a customer" />
+              </SelectTrigger>
+              <SelectContent>
+                {customers.map((customer) => (
+                  <SelectItem key={customer.id} value={customer.id}>
+                    {customer.name} - {customer.phone}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
-              {selectedCustomer && (
-                <div className="space-y-2">
-                  <Label htmlFor="measurementType">Measurement Type</Label>
-                  <Select
-                    value={selectedType}
-                    onValueChange={handleTypeSelect}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select measurement type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {getAvailableTypes().map((type) => (
-                        <SelectItem 
-                          key={type.value} 
-                          value={type.value}
-                          disabled={type.disabled}
-                        >
-                          {type.label}
-                          {type.description && (
-                            <span className="text-muted-foreground ml-2">
-                              ({type.description})
-                            </span>
-                          )}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              )}
-
-              {selectedCustomer && selectedType && (
-                <MeasurementForm
-                  type={selectedType as 'top' | 'blouse' | 'salwar'}
-                  onSubmit={handleMeasurementSubmit}
-                />
-              )}
+          {selectedCustomer && (
+            <div className="space-y-2">
+              <Label htmlFor="measurementType">Measurement Type</Label>
+              <Select
+                value={selectedType}
+                onValueChange={handleTypeSelect}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select measurement type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {getAvailableTypes().map((type) => (
+                    <SelectItem 
+                      key={type.value} 
+                      value={type.value}
+                      disabled={type.disabled}
+                    >
+                      {type.label}
+                      {type.description && (
+                        <span className="text-muted-foreground ml-2">
+                          ({type.description})
+                        </span>
+                      )}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
-          </CardContent>
-        </Card>
+          )}
+
+          {selectedCustomer && selectedType && (
+            <MeasurementForm
+              type={selectedType as 'top' | 'blouse' | 'salwar'}
+              onSubmit={handleMeasurementSubmit}
+            />
+          )}
+        </div>
       </div>
       <Toaster />
     </div>

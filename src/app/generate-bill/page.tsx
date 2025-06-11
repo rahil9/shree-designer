@@ -185,14 +185,17 @@ export default function GenerateBill() {
 
   return (
     <div className="min-h-screen p-6">
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => router.back()}
-        className="mb-6"
-      >
-        <ArrowLeft className="h-5 w-5" />
-      </Button>
+      <div className="flex items-center gap-2 mb-6">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.back()}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back</span>
+        </Button>
+        <h1 className="text-2xl font-bold">Generate Bill</h1>
+      </div>
 
       <div className="max-w-md mx-auto space-y-6">
         {error && (
