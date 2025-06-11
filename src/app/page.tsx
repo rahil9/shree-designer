@@ -5,8 +5,11 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import PasswordProtection from "@/components/PasswordProtection";
 import { Button } from "@/components/ui/button";
-import { LogOut, UserPlus, Ruler, Search, Pencil, Receipt, Users } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { LogOut, UserPlus, Ruler, Search, Pencil, Receipt } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import { Toaster } from "@/components/ui/toaster";
+import { db } from "@/lib/firebase";
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 
 export default function Home() {
   const router = useRouter();
